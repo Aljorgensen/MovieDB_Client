@@ -5,6 +5,14 @@
  */
 package com.mycompany.moviedb;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author andersjorgensen
@@ -47,6 +55,7 @@ public class InfoGui extends javax.swing.JPanel {
         movieRelease = new javax.swing.JLabel();
         movieID = new javax.swing.JLabel();
         deleteMovie = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -108,6 +117,14 @@ public class InfoGui extends javax.swing.JPanel {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        jLabel7.setText("Trailer");
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,7 +162,10 @@ public class InfoGui extends javax.swing.JPanel {
                                 .addComponent(jLabel5))
                             .addComponent(jLabel6)
                             .addComponent(poster, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31))))
+                        .addGap(31, 31, 31))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +196,9 @@ public class InfoGui extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1))
                     .addComponent(poster, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnB)
                     .addComponent(returnToSearchB)
@@ -219,6 +241,18 @@ public class InfoGui extends javax.swing.JPanel {
         ejer.skift(ejer.regui);
     }//GEN-LAST:event_deleteMovieActionPerformed
 
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        // TODO add your handling code here:
+        String url = lg.getTrailerUrl(movieID.getText());
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URL(url).toURI()); 
+            } catch (IOException | URISyntaxException ex) {
+                
+            }
+        }
+    }//GEN-LAST:event_jLabel7MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addB;
@@ -230,6 +264,7 @@ public class InfoGui extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel movieID;
     public javax.swing.JTextArea moviePlot;

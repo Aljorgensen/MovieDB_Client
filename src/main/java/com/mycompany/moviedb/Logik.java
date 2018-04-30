@@ -1,5 +1,9 @@
 package com.mycompany.moviedb;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -9,7 +13,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JApplet;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +30,7 @@ import org.json.simple.parser.JSONParser;
  *
  * @author andersjorgensen
  */
-public class Logik {
+public class Logik extends JApplet{
     
     MainGui mg;
     ResultGui rg;
@@ -426,5 +438,74 @@ public class Logik {
         }else if(page > 0){
             page = 0;
         }
+    }
+    
+    public String getTrailerUrl(String id){
+        String urlString = "";
+        String inline = "";
+        String line;
+        StringBuilder result = new StringBuilder("");
+        BufferedReader rd;
+        try {
+            URL url = new URL("http://peterpan.dk/api/movie/trailer?id=" + id + "&apikey=" + apiKey);
+            //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //Set the request to GET or POST as per the requirements
+            conn.setRequestMethod("GET");
+            //Use the connect method to create the connection bridge
+            conn.connect();
+            //Get the response status of the Rest API
+            int responsecode = conn.getResponseCode();
+            System.out.println("Response code is: " + responsecode);
+            //Iterating condition to if response code is not 200 then throw a runtime exception
+            //else continue the actual process of getting the JSON data
+            
+            if (responsecode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responsecode);
+            } else {
+                //Scanner functionality will read the JSON data from the stream
+                rd = new BufferedReader(new InputStreamReader(url.openStream()));
+                while ((line = rd.readLine()) != null) {
+                    result.append(line).append("\n");
+                }
+                rd.close();
+            }
+            inline = result.toString();
+            urlString = inline.replace("{\"trailerlink\":\"", "");
+            urlString = urlString.replace("\"}", ""); 
+
+            //Disconnect the HttpURLConnection stream
+            //conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return urlString;
+    }
+    
+    public void movietest(){
+
+        // 1. Create a scroll pane object and the other
+        //    necessary objects.
+        
+        JScrollPane scrollPane = null;
+        JLabel label = null;  // Not a canvas for JScrollPane!
+        JPanel panel = null;  // supports double buffering
+        Container container = rg.jPanel1;
+        container.setLayout(new GridLayout(1,2));
+        panel = new JPanel();
+        // 4. Create a Swing label and a panel for double buffering.
+        for(int i = 0; i < title.size(); i++){
+           label = new JLabel(title.get(i) + "\n");
+           panel.add(label); 
+        }
+        // 5. Create a scroll pane and add the panel to it.
+
+        scrollPane = new JScrollPane(panel,
+                     JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        // 6. Add the scroll pane to the contentpane of JApplet.
+
+        container.add(scrollPane);
     }
 }

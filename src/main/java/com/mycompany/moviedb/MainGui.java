@@ -156,6 +156,7 @@ public class MainGui extends javax.swing.JPanel {
         lg.definePagenumber();
         lg.choice = 0;
         lg.type = 1;
+        //lg.movietest();
         regui.reguiTitle.setText("Movielist");
         regui.choiceOne.setText("<-");
         regui.choiceTwo.setText("");
