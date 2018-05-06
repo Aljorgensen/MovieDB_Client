@@ -1,8 +1,6 @@
 package com.mycompany.moviedb;
 
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -13,10 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -268,6 +262,7 @@ public class Logik extends JApplet{
     }
     
     public void addMovie(String id){
+        String result = "";
             try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -302,9 +297,14 @@ public class Logik extends JApplet{
                 content.append(line).append("\n");
             }
             bufferedReader.close();
+            if(content.toString().contains("Duplicate")){
+                result = "Allready in database";
+            }else{
+               result = "Added to database";
+            }
             
             // Prints the response
-            JOptionPane.showMessageDialog(null, content.toString());
+            JOptionPane.showMessageDialog(null, result);
 
         } catch (Exception e) {
             System.out.println("Error Message");
@@ -406,8 +406,11 @@ public class Logik extends JApplet{
             }
             bufferedReader.close();
 
+            String result = content.toString();
+            result = result.replace("{\"resultString\":","");
+            result = result.replace("}","");
             // Prints the response
-            JOptionPane.showMessageDialog(null, content.toString());
+            JOptionPane.showMessageDialog(null, result);
 
         } catch (Exception e) {
             System.out.println("Error Message");
@@ -473,7 +476,7 @@ public class Logik extends JApplet{
             inline = result.toString();
             urlString = inline.replace("{\"trailerlink\":\"", "");
             urlString = urlString.replace("\"}", ""); 
-
+            
             //Disconnect the HttpURLConnection stream
             //conn.disconnect();
         } catch (Exception e) {
@@ -483,29 +486,26 @@ public class Logik extends JApplet{
     }
     
     public void movietest(){
-
+        
         // 1. Create a scroll pane object and the other
         //    necessary objects.
-        
         JScrollPane scrollPane = null;
         JLabel label = null;  // Not a canvas for JScrollPane!
         JPanel panel = null;  // supports double buffering
         Container container = rg.jPanel1;
-        container.setLayout(new GridLayout(1,2));
+        container.setLayout(new GridLayout(1,1));
         panel = new JPanel();
         // 4. Create a Swing label and a panel for double buffering.
         for(int i = 0; i < title.size(); i++){
            label = new JLabel(title.get(i) + "\n");
-           panel.add(label); 
+           panel.add(label);
         }
         // 5. Create a scroll pane and add the panel to it.
-
         scrollPane = new JScrollPane(panel,
                      JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         // 6. Add the scroll pane to the contentpane of JApplet.
-
         container.add(scrollPane);
     }
 }

@@ -5,7 +5,6 @@
  */
 package com.mycompany.moviedb;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -147,6 +146,7 @@ public class MainGui extends javax.swing.JPanel {
         stgui.ejer = ejer;
         ejer.skift(stgui); 
         lg.apiKey = "";
+        lg.latest.clear();
     }//GEN-LAST:event_cancelActionPerformed
 
     private void movieListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_movieListActionPerformed
