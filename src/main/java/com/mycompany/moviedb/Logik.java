@@ -1,21 +1,20 @@
 package com.mycompany.moviedb;
 
-import java.awt.Container;
-import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JApplet;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -37,6 +36,7 @@ public class Logik extends JApplet{
     ArrayList<String> plot = new ArrayList<>();
     ArrayList<String> latest = new ArrayList<>();
     String apiKey = "";
+    String token = "";
     Boolean loginStatus;
     int parameter = 0;
     double page = 0;
@@ -298,7 +298,7 @@ public class Logik extends JApplet{
             }
             bufferedReader.close();
             if(content.toString().contains("Duplicate")){
-                result = "Allready in database";
+                result = "Already in database";
             }else{
                result = "Added to database";
             }
@@ -313,7 +313,7 @@ public class Logik extends JApplet{
         }
     }
     
-    void login(String username, String password){
+    void getToken(String username, String password){
         try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -321,8 +321,8 @@ public class Logik extends JApplet{
             data.put("password", password);
 
             // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://peterpan.dk/api/user/login");
-            HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
+            URL url = new URL("https://komsaananna.dk/api/user/requesttoken");
+            HttpsURLConnection httpConnection  = (HttpsURLConnection) url.openConnection();
             httpConnection.setDoOutput(true);
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
@@ -332,9 +332,10 @@ public class Logik extends JApplet{
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
             wr.write(data.toString().getBytes());
             Integer responseCode = httpConnection.getResponseCode();
-
+            
+            System.out.println("Response code is: " + responseCode);
             BufferedReader bufferedReader;
-
+            
             // Creates a reader buffer
             if (responseCode > 199 && responseCode < 300) {
                 bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
@@ -348,19 +349,14 @@ public class Logik extends JApplet{
             while ((line = bufferedReader.readLine()) != null) {
                 content.append(line).append("\n");
             }
-            bufferedReader.close();
-
-            // Prints the response
-            apiKey = content.toString();
-            apiKey = apiKey.replace("{\"apIkey\":\"", "");
-            apiKey = apiKey.replace("\"}", "");
-            if(apiKey.contains("One")){
-                loginStatus = false;
-                JOptionPane.showMessageDialog(null, "Wrong username og password! Try again!");
-            }else{
-                loginStatus = true;
-                JOptionPane.showMessageDialog(null, "Succesfull login");
-            }
+            bufferedReader.close();;
+            
+            token = content.toString();
+            token = token.replace("{\"token\":\"", "");
+            token = token.replace("\"}","");
+            writeTokenToFile(token);
+            
+            System.out.println(token);
 
         } catch (Exception e) {
             System.out.println("Error Message");
@@ -370,7 +366,81 @@ public class Logik extends JApplet{
         
     }
     
+    void verifyToken(){
+        String inline = "";
+        String line;
+        String Auth = "Bearer " + token;
+        StringBuilder result = new StringBuilder("");
+        BufferedReader rd;
+        System.out.println("1");
+        try {
+            System.out.println("2");
+            URL url = new URL("https://komsaananna.dk/api/user/varifytoken");
+            //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
+            System.out.println("3");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //Set the request to GET or POST as per the requirements
+            System.out.println("4");
+            conn.setRequestMethod("GET");
+            System.out.println("5");
+            conn.setRequestProperty ("Authorization", Auth);
+            System.out.println("6");
+            //Get the response status of the Rest API
+            int responsecode = conn.getResponseCode();
+            System.out.println("Response code is: " + responsecode);
+            //Iterating condition to if response code is not 200 then throw a runtime exception
+            //else continue the actual process of getting the JSON data
+            
+            if (responsecode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responsecode);
+            } else {
+                //Scanner functionality will read the JSON data from the stream
+                rd = new BufferedReader(new InputStreamReader(url.openStream()));
+                while ((line = rd.readLine()) != null) {
+                    result.append(line).append("\n");
+                }
+                rd.close();
+            }
+            inline = result.toString();
+            System.out.println(inline);
+            
+            //Disconnect the HttpURLConnection stream
+            //conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void writeTokenToFile(String tokenString){
+        
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+
+        try {
+            fw = new FileWriter("/Users/andersjorgensen/Downloads/token.txt");
+            bw = new BufferedWriter(fw);
+            bw.write(tokenString);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+                if (fw != null) {
+                    fw.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
     public void deleteMovie(String id){
+        String result = "";
         try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -406,9 +476,9 @@ public class Logik extends JApplet{
             }
             bufferedReader.close();
 
-            String result = content.toString();
-            result = result.replace("{\"resultString\":","");
-            result = result.replace("}","");
+            if(content.toString().contains("Deleted")){
+                result = "Deleted from database";
+            }
             // Prints the response
             JOptionPane.showMessageDialog(null, result);
 
@@ -485,27 +555,4 @@ public class Logik extends JApplet{
         return urlString;
     }
     
-    public void movietest(){
-        
-        // 1. Create a scroll pane object and the other
-        //    necessary objects.
-        JScrollPane scrollPane = null;
-        JLabel label = null;  // Not a canvas for JScrollPane!
-        JPanel panel = null;  // supports double buffering
-        Container container = rg.jPanel1;
-        container.setLayout(new GridLayout(1,1));
-        panel = new JPanel();
-        // 4. Create a Swing label and a panel for double buffering.
-        for(int i = 0; i < title.size(); i++){
-           label = new JLabel(title.get(i) + "\n");
-           panel.add(label);
-        }
-        // 5. Create a scroll pane and add the panel to it.
-        scrollPane = new JScrollPane(panel,
-                     JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-        // 6. Add the scroll pane to the contentpane of JApplet.
-        container.add(scrollPane);
-    }
 }

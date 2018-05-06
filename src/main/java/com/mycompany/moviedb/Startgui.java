@@ -98,19 +98,22 @@ public class Startgui extends javax.swing.JPanel {
     private void loginBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBActionPerformed
         // TODO add your handling code here:
         String pass = String.valueOf(passT.getPassword());
-        ejer.lo.login(userT.getText(), pass);
+        ejer.lo.getToken(userT.getText(), pass);
+        ejer.lo.verifyToken();
+        /*
         if(ejer.lo.loginStatus == true){
           ejer.skift(ejer.maingui);  
-        }
+        }*/
     }//GEN-LAST:event_loginBActionPerformed
 
     private void passTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passTActionPerformed
         // TODO add your handling code here:
         String pass = String.valueOf(passT.getPassword());
-        ejer.lo.login(userT.getText(), pass);
-        if(ejer.lo.loginStatus == true){
+        ejer.lo.getToken(userT.getText(), pass);
+        ejer.lo.verifyToken();
+        /*if(ejer.lo.loginStatus == true){
           ejer.skift(ejer.maingui);  
-        }
+        }*/
     }//GEN-LAST:event_passTActionPerformed
 
 
