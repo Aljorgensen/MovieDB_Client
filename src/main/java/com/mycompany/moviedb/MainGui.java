@@ -142,6 +142,7 @@ public class MainGui extends javax.swing.JPanel {
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
         // TODO add your handling code here:
+        lg.loginStatus = false;
         Startgui stgui = new Startgui();
         stgui.ejer = ejer;
         ejer.skift(stgui); 

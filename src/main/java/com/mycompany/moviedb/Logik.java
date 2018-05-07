@@ -35,7 +35,7 @@ public class Logik {
     ArrayList<String> latest = new ArrayList<>();
     String apiKey = "";
     String token = "";
-    Boolean loginStatus = false;
+    Boolean loginStatus;
     int parameter = 0;
     double page = 0;
     double defineNum = 5;
@@ -350,10 +350,15 @@ public class Logik {
             bufferedReader.close();;
             
             token = content.toString();
-            token = token.replace("{\"token\":\"", "");
-            token = token.replace("\"}","");
-            token = token.replace("\n", "");
-            writeTokenToFile(token);
+            if(token.contains("token")){
+               token = token.replace("{\"token\":\"", "");
+               token = token.replace("\"}","");
+               token = token.replace("\n", "");
+               writeTokenToFile(token); 
+               verifyToken();
+            }else{
+               JOptionPane.showMessageDialog(null, "Wrong username or password"); 
+            }
 
         } catch (Exception e) {
             System.out.println("Error Message");
@@ -396,7 +401,7 @@ public class Logik {
         FileWriter fw = null;
 
         try {
-            fw = new FileWriter("/Users/andersjorgensen/Downloads/token.txt");
+            fw = new FileWriter("/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt");
             bw = new BufferedWriter(fw);
             bw.write(tokenString);
 
