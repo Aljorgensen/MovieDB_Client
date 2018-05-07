@@ -12,9 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
-import javax.swing.JApplet;
 import javax.swing.JOptionPane;
-import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +21,7 @@ import org.json.simple.parser.JSONParser;
  *
  * @author andersjorgensen
  */
-public class Logik extends JApplet{
+public class Logik {
     
     MainGui mg;
     ResultGui rg;
@@ -37,7 +35,7 @@ public class Logik extends JApplet{
     ArrayList<String> latest = new ArrayList<>();
     String apiKey = "";
     String token = "";
-    Boolean loginStatus;
+    Boolean loginStatus = false;
     int parameter = 0;
     double page = 0;
     double defineNum = 5;
@@ -354,9 +352,8 @@ public class Logik extends JApplet{
             token = content.toString();
             token = token.replace("{\"token\":\"", "");
             token = token.replace("\"}","");
+            token = token.replace("\n", "");
             writeTokenToFile(token);
-            
-            System.out.println(token);
 
         } catch (Exception e) {
             System.out.println("Error Message");
@@ -367,43 +364,25 @@ public class Logik extends JApplet{
     }
     
     void verifyToken(){
-        String inline = "";
-        String line;
         String Auth = "Bearer " + token;
-        StringBuilder result = new StringBuilder("");
-        BufferedReader rd;
-        System.out.println("1");
-        try {
-            System.out.println("2");
+        try { 
             URL url = new URL("https://komsaananna.dk/api/user/varifytoken");
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
-            System.out.println("3");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
-            System.out.println("4");
             conn.setRequestMethod("GET");
-            System.out.println("5");
             conn.setRequestProperty ("Authorization", Auth);
-            System.out.println("6");
+            
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode);
+            System.out.println("Response code is: " + responsecode + " token verified");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
-            
             if (responsecode != 200) {
                 throw new RuntimeException("HttpResponseCode: " + responsecode);
             } else {
-                //Scanner functionality will read the JSON data from the stream
-                rd = new BufferedReader(new InputStreamReader(url.openStream()));
-                while ((line = rd.readLine()) != null) {
-                    result.append(line).append("\n");
-                }
-                rd.close();
+                loginStatus = true; 
             }
-            inline = result.toString();
-            System.out.println(inline);
-            
             //Disconnect the HttpURLConnection stream
             //conn.disconnect();
         } catch (Exception e) {

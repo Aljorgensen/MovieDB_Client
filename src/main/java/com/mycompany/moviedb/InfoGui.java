@@ -243,7 +243,7 @@ public class InfoGui extends javax.swing.JPanel {
         if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URL(url).toURI()); 
-            } catch (IOException | URISyntaxException ex) {
+            } catch (Exception ex) {
                 
             }
         }
