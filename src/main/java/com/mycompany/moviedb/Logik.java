@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,31 +57,27 @@ public class Logik {
         String line;
         String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
-        BufferedReader rd;
         try {
-            URL url = new URL("http://" + clientNavn + "/api/movie/search/?search=" + search);
-            //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //Set the request to GET or POST as per the requirements
+            URL u = new URL("https://komsaananna.dk/api/movie/search/?search=" + search);
+            HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty ("Authorization", Auth);
-            //Use the connect method to create the connection bridge
-            conn.connect();
-            //Get the response status of the Rest API
+            conn.setRequestProperty("Authorization", Auth);
+            conn.setRequestProperty("Content-Type", "application/json");
+            InputStream is = conn.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode + " Moviesearch");
+            System.out.println("Response code is: " + responsecode + " Trailer");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
-            
             if (responsecode != 200) {
                 throw new RuntimeException("HttpResponseCode: " + responsecode);
             } else {
                 //Scanner functionality will read the JSON data from the stream
-                rd = new BufferedReader(new InputStreamReader(url.openStream()));
-                while ((line = rd.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
                     result.append(line).append("\n");
                 }
-                rd.close();
             }
             inline = result.toString();
             //JSONParser reads the data from string object and break each data into key value pairs
@@ -99,7 +96,10 @@ public class Logik {
                 plot.add("" + jsonobj_1.get("plot"));
             } 
             //Disconnect the HttpURLConnection stream
-            //conn.disconnect();
+            br.close();
+            isr.close();
+            is.close();
+            conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -267,7 +267,6 @@ public class Logik {
     
     public void addMovie(String id){
         String result = "";
-        String Auth = "Bearer " + token;
             try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -280,7 +279,6 @@ public class Logik {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
-            httpConnection.setRequestProperty ("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -378,7 +376,7 @@ public class Logik {
     void verifyToken(){
         String Auth = "Bearer " + token;
         try { 
-            URL url = new URL("https://komsaananna.dk/api/user/varifytoken");
+            URL url = new URL("https://komsaananna.dk/api/user/verifytoken");
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -387,7 +385,7 @@ public class Logik {
             
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode + " Token verified");
+            System.out.println("Response code is: " + responsecode + " Token verification");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
             if (responsecode != 200) {
@@ -468,7 +466,6 @@ public class Logik {
     
     public void deleteMovie(String id){
         String result = "";
-        String Auth = "Bearer " + token;
         try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -481,7 +478,6 @@ public class Logik {
             httpConnection.setRequestMethod("DELETE");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
-            httpConnection.setRequestProperty ("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -548,17 +544,16 @@ public class Logik {
         String line;
         String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
-        BufferedReader rd;
         try {
-            URL url = new URL("http://" + clientNavn + "/api/movie/trailer?id=" + id);
-            //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //Set the request to GET or POST as per the requirements
+            URL u = new URL("https://komsaananna.dk/api/movie/trailer?id=" + id);
+            HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty ("Authorization", Auth);
-            //Use the connect method to create the connection bridge
-            conn.connect();
-            //Get the response status of the Rest API
+            conn.setRequestProperty("Authorization", Auth);
+            conn.setRequestProperty("Content-Type", "application/json");
+            InputStream is = conn.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
             int responsecode = conn.getResponseCode();
             System.out.println("Response code is: " + responsecode + " Trailer");
             //Iterating condition to if response code is not 200 then throw a runtime exception
@@ -567,11 +562,9 @@ public class Logik {
                 throw new RuntimeException("HttpResponseCode: " + responsecode);
             } else {
                 //Scanner functionality will read the JSON data from the stream
-                rd = new BufferedReader(new InputStreamReader(url.openStream()));
-                while ((line = rd.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
                     result.append(line).append("\n");
                 }
-                rd.close();
             }
             inline = result.toString();
             if(inline.contains("no trailer")){
@@ -580,8 +573,12 @@ public class Logik {
               urlString = inline.replace("{\"trailerlink\":\"", "");
             urlString = urlString.replace("\"}", "");   
             }
+            
+            br.close();
+            isr.close();
+            is.close();
+            conn.disconnect();
             //Disconnect the HttpURLConnection stream
-            //conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
