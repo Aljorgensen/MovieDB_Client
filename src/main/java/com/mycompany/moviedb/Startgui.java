@@ -102,7 +102,7 @@ public class Startgui extends javax.swing.JPanel {
         String pass = String.valueOf(passT.getPassword());
         ejer.lo.getToken(userT.getText(), pass);
         if(ejer.lo.loginStatus == true){
-          JOptionPane.showMessageDialog(null, "Succesful login"); 
+          JOptionPane.showMessageDialog(null, "Succesful login");
           ejer.skift(ejer.maingui);  
         }
     }//GEN-LAST:event_loginBActionPerformed

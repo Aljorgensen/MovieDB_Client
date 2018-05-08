@@ -33,15 +33,14 @@ public class Logik {
     ArrayList<String> poster = new ArrayList<>();
     ArrayList<String> plot = new ArrayList<>();
     ArrayList<String> latest = new ArrayList<>();
-    String apiKey = "";
-    String token = "";
-    Boolean loginStatus;
-    int parameter = 0;
-    double page = 0;
-    double defineNum = 5;
-    double pageNum = 0;
-    int choice = 0;
-    int type = 0;
+    private String token = "";
+    Boolean loginStatus = false;
+    public int parameter = 0;
+    public double page = 0;
+    public double defineNum = 5;
+    public double pageNum = 0;
+    public int choice = 0;
+    public int type = 0;
     
     public void movie_search(String search) {
         //inline will store the JSON data streamed in string format
@@ -55,7 +54,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/search/?search=" + search + "&apikey=" + apiKey);
+            URL url = new URL("http://peterpan.dk/api/movie/search/?search=" + search);
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -64,7 +63,7 @@ public class Logik {
             conn.connect();
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode);
+            System.out.println("Response code is: " + responsecode + " Moviesearch");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
             
@@ -213,7 +212,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/ListMovies?apikey=" + apiKey);
+            URL url = new URL("http://peterpan.dk/api/movie/ListMovies?");
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -222,7 +221,7 @@ public class Logik {
             conn.connect();
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode);
+            System.out.println("Response code is: " + responsecode + " Movielist");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
             
@@ -267,7 +266,7 @@ public class Logik {
             data.put("ID", id);
 
             // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://peterpan.dk/api/movie/add?ID=" + id + "&apikey=" + apiKey);
+            URL url = new URL("http://peterpan.dk/api/movie/add?ID=" + id);
             HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
             httpConnection.setDoOutput(true);
             httpConnection.setRequestMethod("POST");
@@ -278,7 +277,7 @@ public class Logik {
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
             wr.write(data.toString().getBytes());
             Integer responseCode = httpConnection.getResponseCode();
-
+            System.out.println("Response code is: " + responseCode + " Add movie");
             BufferedReader bufferedReader;
 
             // Creates a reader buffer
@@ -331,7 +330,7 @@ public class Logik {
             wr.write(data.toString().getBytes());
             Integer responseCode = httpConnection.getResponseCode();
             
-            System.out.println("Response code is: " + responseCode);
+            System.out.println("Response code is: " + responseCode + " Got token");
             BufferedReader bufferedReader;
             
             // Creates a reader buffer
@@ -352,8 +351,7 @@ public class Logik {
             token = content.toString();
             if(token.contains("token")){
                token = token.replace("{\"token\":\"", "");
-               token = token.replace("\"}","");
-               token = token.replace("\n", "");
+               token = token.replace("\"}\n","");
                writeTokenToFile(token); 
                verifyToken();
             }else{
@@ -380,7 +378,7 @@ public class Logik {
             
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode + " token verified");
+            System.out.println("Response code is: " + responsecode + " Token verified");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
             if (responsecode != 200) {
@@ -393,6 +391,10 @@ public class Logik {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    void renewToken(){
+        
     }
     
     public void writeTokenToFile(String tokenString){
@@ -431,7 +433,7 @@ public class Logik {
             data.put("ID", id);
 
             // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://peterpan.dk/api/movie/del?ID=" + id + "&apikey=" + apiKey);
+            URL url = new URL("http://peterpan.dk/api/movie/del?ID=" + id);
             HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
             httpConnection.setDoOutput(true);
             httpConnection.setRequestMethod("DELETE");
@@ -442,7 +444,7 @@ public class Logik {
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
             wr.write(data.toString().getBytes());
             Integer responseCode = httpConnection.getResponseCode();
-
+            System.out.println("Response code is: " + responseCode + " Delete movie");
             BufferedReader bufferedReader;
 
             // Creates a reader buffer
@@ -504,7 +506,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/trailer?id=" + id + "&apikey=" + apiKey);
+            URL url = new URL("http://peterpan.dk/api/movie/trailer?id=" + id);
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -513,10 +515,9 @@ public class Logik {
             conn.connect();
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode);
+            System.out.println("Response code is: " + responsecode + " Trailer");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
-            
             if (responsecode != 200) {
                 throw new RuntimeException("HttpResponseCode: " + responsecode);
             } else {
@@ -528,9 +529,12 @@ public class Logik {
                 rd.close();
             }
             inline = result.toString();
-            urlString = inline.replace("{\"trailerlink\":\"", "");
-            urlString = urlString.replace("\"}", ""); 
-            
+            if(inline.contains("no trailer")){
+               JOptionPane.showMessageDialog(null, "No trailer aviable"); 
+            }else{
+              urlString = inline.replace("{\"trailerlink\":\"", "");
+            urlString = urlString.replace("\"}", "");   
+            }
             //Disconnect the HttpURLConnection stream
             //conn.disconnect();
         } catch (Exception e) {
