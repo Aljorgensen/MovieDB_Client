@@ -46,6 +46,7 @@ public class Logik {
     public int choice = 0;
     public int type = 0;
     
+    //API-Methods
     public void movie_search(String search) {
         //inline will store the JSON data streamed in string format
         title.clear();
@@ -102,107 +103,6 @@ public class Logik {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-        
-    public void setLatest(){
-        String line = "";
-        mg.LatestArea.setText("");
-        for(String a : latest){
-            line = a.replaceAll("%20", " ");
-            mg.LatestArea.append(line + "\n");
-        }
-    }
-    
-    public Boolean setMovie(){
-        if(title.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Seach attempt failed, try again");
-            return false;
-        }else{
-        rg.movieOneTitle.setText("Title: " + title.get(0 + parameter));
-        rg.movieOneID.setText("ID: " + id.get(0 + parameter));
-        if(title.size() > 1 + parameter){
-           rg.movieTwoTitle.setText("Title: " + title.get(1 + parameter));
-           rg.movieTwoID.setText("ID: " + id.get(1 + parameter));
-          if(title.size() > 2 + parameter){
-            rg.movieThreeTitle.setText("Title: " + title.get(2 + parameter));
-            rg.movieThreeID.setText("ID: " + id.get(2 + parameter));
-            if(title.size() > 3 + parameter) {
-              rg.movieFourTitle.setText("Title: " + title.get(3 + parameter));
-              rg.movieFourID.setText("ID: " + id.get(3 + parameter));
-              if(title.size() > 4 + parameter){
-                rg.movieFiveTitle.setText("Title: " + title.get(4 + parameter));
-                rg.movieFiveID.setText("ID: " + id.get(4 + parameter));
-              }else{
-                rg.movieFiveTitle.setText("Title: No Result");
-                rg.movieFiveID.setText("ID: No Result");   
-              }
-            }else{
-             rg.movieFourTitle.setText("Title: No Result");
-             rg.movieFourID.setText("ID: No Result");
-             rg.movieFiveTitle.setText("Title: No Result");
-             rg.movieFiveID.setText("ID: No Result");  
-            }
-          }else{
-            rg.movieThreeTitle.setText("Title: No Result");
-            rg.movieThreeID.setText("ID: No Result");
-            rg.movieFourTitle.setText("Title: No Result");
-            rg.movieFourID.setText("ID: No Result");
-            rg.movieFiveTitle.setText("Title: No Result");
-            rg.movieFiveID.setText("ID: No Result"); 
-          }
-        }else{
-            rg.movieTwoTitle.setText("Title: No Result");
-            rg.movieTwoID.setText("ID: No Result");
-            rg.movieThreeTitle.setText("Title: No Result");
-            rg.movieThreeID.setText("ID: No Result");
-            rg.movieFourTitle.setText("Title: No Result");
-            rg.movieFourID.setText("ID: No Result");
-            rg.movieFiveTitle.setText("Title: No Result");
-            rg.movieFiveID.setText("ID: No Result");
-        }  
-        }
-        return true;
-    }
-    
-    public void splitPlot(int num){
-        ig.moviePlot.setText("");
-        String[] plottext;
-        plottext = plot.get(num).split(", ");
-        for(String str : plottext){
-            ig.moviePlot.append(str + ",\n");
-        }
-    }
-    
-    public String splitRelease(int num){
-        String[] releaseSplit;
-        releaseSplit = release.get(num).split(" ");
-        return releaseSplit[0];
-    }
-    
-    public void setPoster(int num){
-       ig.poster.removeAll();
-       String posterUrl = poster.get(num + parameter);
-       if(!"".equals(posterUrl)){
-         try{
-           BufferedImage img = ImageIO.read(new URL(posterUrl));
-           ig.poster.setIcon(new javax.swing.ImageIcon(img)); 
-        }catch(IOException e){
-            e.printStackTrace();
-        }  
-       }
-    }
-    
-    public void setPosterResult(int num){
-       rg.poster.removeAll();
-       String posterUrl = poster.get(num + parameter);
-       if(!"".equals(posterUrl)){
-         try{
-           BufferedImage img = ImageIO.read(new URL(posterUrl));
-           rg.poster.setIcon(new javax.swing.ImageIcon(img)); 
-        }catch(IOException e){
-            e.printStackTrace();
-        }  
-       }
     }
     
     public void getMovielist(){
@@ -316,6 +216,104 @@ public class Logik {
         }
     }
     
+    public void deleteMovie(String id) {
+        String result = "";
+        try {
+            // Construct manually a JSON object in Java, for testing purposes an object with an object
+            JSONObject data = new JSONObject();
+            data.put("ID", id);
+
+            // URL and parameters for the connection, This particulary returns the information passed
+            URL url = new URL("http://" + clientNavn + "/api/movie/del?ID=" + id);
+            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection.setDoOutput(true);
+            httpConnection.setRequestMethod("DELETE");
+            httpConnection.setRequestProperty("Content-Type", "application/json");
+            httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty("Authorization", "Bearer " + token);
+
+            // Writes the JSON parsed as string to the connection
+            DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
+            wr.write(data.toString().getBytes());
+            Integer responseCode = httpConnection.getResponseCode();
+            System.out.println("Response code is: " + responseCode + " Delete movie");
+            BufferedReader bufferedReader;
+
+            // Creates a reader buffer
+            if (responseCode > 199 && responseCode < 300) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getErrorStream()));
+            }
+
+            // To receive the response
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            bufferedReader.close();
+
+            if (content.toString().contains("Deleted")) {
+                result = "Deleted from database";
+            }
+            // Prints the response
+            JOptionPane.showMessageDialog(null, result);
+
+        } catch (Exception e) {
+            System.out.println("Error Message");
+            System.out.println(e.getClass().getSimpleName());
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public String getTrailerUrl(String id){
+        String urlString = "";
+        String inline = "";
+        String line;
+        StringBuilder result = new StringBuilder("");
+        try {
+            URL u = new URL("https://komsaananna.dk/api/movie/trailer?id=" + id);
+            HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            InputStream is = conn.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            int responsecode = conn.getResponseCode();
+            System.out.println("Response code is: " + responsecode + " Trailer");
+            //Iterating condition to if response code is not 200 then throw a runtime exception
+            //else continue the actual process of getting the JSON data
+            if (responsecode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responsecode);
+            } else {
+                //Scanner functionality will read the JSON data from the stream
+                while ((line = br.readLine()) != null) {
+                    result.append(line).append("\n");
+                }
+            }
+            inline = result.toString();
+            if(inline.contains("no trailer")){
+               JOptionPane.showMessageDialog(null, "No trailer aviable"); 
+            }else{
+              urlString = inline.replace("{\"trailerlink\":\"", "");
+            urlString = urlString.replace("\"}", "");   
+            }
+            
+            br.close();
+            isr.close();
+            is.close();
+            conn.disconnect();
+            //Disconnect the HttpURLConnection stream
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return urlString;
+    }
+    
+    //JWT-Methods
     void getToken(String username, String password){
         try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
@@ -402,6 +400,108 @@ public class Logik {
         
     }
     
+    //Logic-Methoeds
+    public void setLatest(){
+        String line = "";
+        mg.LatestArea.setText("");
+        for(String a : latest){
+            line = a.replaceAll("%20", " ");
+            mg.LatestArea.append(line + "\n");
+        }
+    }
+    
+    public Boolean setMovie(){
+        if(title.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Seach attempt failed, try again");
+            return false;
+        }else{
+        rg.movieOneTitle.setText("Title: " + title.get(0 + parameter));
+        rg.movieOneID.setText("ID: " + id.get(0 + parameter));
+        if(title.size() > 1 + parameter){
+           rg.movieTwoTitle.setText("Title: " + title.get(1 + parameter));
+           rg.movieTwoID.setText("ID: " + id.get(1 + parameter));
+          if(title.size() > 2 + parameter){
+            rg.movieThreeTitle.setText("Title: " + title.get(2 + parameter));
+            rg.movieThreeID.setText("ID: " + id.get(2 + parameter));
+            if(title.size() > 3 + parameter) {
+              rg.movieFourTitle.setText("Title: " + title.get(3 + parameter));
+              rg.movieFourID.setText("ID: " + id.get(3 + parameter));
+              if(title.size() > 4 + parameter){
+                rg.movieFiveTitle.setText("Title: " + title.get(4 + parameter));
+                rg.movieFiveID.setText("ID: " + id.get(4 + parameter));
+              }else{
+                rg.movieFiveTitle.setText("Title: No Result");
+                rg.movieFiveID.setText("ID: No Result");   
+              }
+            }else{
+             rg.movieFourTitle.setText("Title: No Result");
+             rg.movieFourID.setText("ID: No Result");
+             rg.movieFiveTitle.setText("Title: No Result");
+             rg.movieFiveID.setText("ID: No Result");  
+            }
+          }else{
+            rg.movieThreeTitle.setText("Title: No Result");
+            rg.movieThreeID.setText("ID: No Result");
+            rg.movieFourTitle.setText("Title: No Result");
+            rg.movieFourID.setText("ID: No Result");
+            rg.movieFiveTitle.setText("Title: No Result");
+            rg.movieFiveID.setText("ID: No Result"); 
+          }
+        }else{
+            rg.movieTwoTitle.setText("Title: No Result");
+            rg.movieTwoID.setText("ID: No Result");
+            rg.movieThreeTitle.setText("Title: No Result");
+            rg.movieThreeID.setText("ID: No Result");
+            rg.movieFourTitle.setText("Title: No Result");
+            rg.movieFourID.setText("ID: No Result");
+            rg.movieFiveTitle.setText("Title: No Result");
+            rg.movieFiveID.setText("ID: No Result");
+        }  
+        }
+        return true;
+    }
+    
+    public void splitPlot(int num){
+        ig.moviePlot.setText("");
+        String[] plottext;
+        plottext = plot.get(num).split(", ");
+        for(String str : plottext){
+            ig.moviePlot.append(str + ",\n");
+        }
+    }
+    
+    public String splitRelease(int num){
+        String[] releaseSplit;
+        releaseSplit = release.get(num).split(" ");
+        return releaseSplit[0];
+    }
+    
+    public void setPoster(int num){
+       ig.poster.removeAll();
+       String posterUrl = poster.get(num + parameter);
+       if(!"".equals(posterUrl)){
+         try{
+           BufferedImage img = ImageIO.read(new URL(posterUrl));
+           ig.poster.setIcon(new javax.swing.ImageIcon(img)); 
+        }catch(IOException e){
+            e.printStackTrace();
+        }  
+       }
+    }
+    
+    public void setPosterResult(int num){
+       rg.poster.removeAll();
+       String posterUrl = poster.get(num + parameter);
+       if(!"".equals(posterUrl)){
+         try{
+           BufferedImage img = ImageIO.read(new URL(posterUrl));
+           rg.poster.setIcon(new javax.swing.ImageIcon(img)); 
+        }catch(IOException e){
+            e.printStackTrace();
+        }  
+       }
+    }
+    
     public void readTokenFromFile(){
         BufferedReader br = null;
         FileReader fr = null;
@@ -462,57 +562,6 @@ public class Logik {
         }
     }
     
-    public void deleteMovie(String id){
-        String result = "";
-        try {
-            // Construct manually a JSON object in Java, for testing purposes an object with an object
-            JSONObject data = new JSONObject();
-            data.put("ID", id);
-
-            // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://" + clientNavn + "/api/movie/del?ID=" + id);
-            HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
-            httpConnection.setDoOutput(true);
-            httpConnection.setRequestMethod("DELETE");
-            httpConnection.setRequestProperty("Content-Type", "application/json");
-            httpConnection.setRequestProperty("Accept", "application/json");
-            httpConnection.setRequestProperty("Authorization", "Bearer " + token);
-
-            // Writes the JSON parsed as string to the connection
-            DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
-            wr.write(data.toString().getBytes());
-            Integer responseCode = httpConnection.getResponseCode();
-            System.out.println("Response code is: " + responseCode + " Delete movie");
-            BufferedReader bufferedReader;
-
-            // Creates a reader buffer
-            if (responseCode > 199 && responseCode < 300) {
-                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
-            } else {
-                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getErrorStream()));
-            }
-
-            // To receive the response
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            bufferedReader.close();
-
-            if(content.toString().contains("Deleted")){
-                result = "Deleted from database";
-            }
-            // Prints the response
-            JOptionPane.showMessageDialog(null, result);
-
-        } catch (Exception e) {
-            System.out.println("Error Message");
-            System.out.println(e.getClass().getSimpleName());
-            System.out.println(e.getMessage());
-        }
-    }
-    
     public void definePagenumber(){
         double size = title.size();
         page = size / defineNum;
@@ -535,52 +584,6 @@ public class Logik {
         }else if(page > 0){
             page = 0;
         }
-    }
-    
-    public String getTrailerUrl(String id){
-        String urlString = "";
-        String inline = "";
-        String line;
-        StringBuilder result = new StringBuilder("");
-        try {
-            URL u = new URL("https://komsaananna.dk/api/movie/trailer?id=" + id);
-            HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("Content-Type", "application/json");
-            InputStream is = conn.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode + " Trailer");
-            //Iterating condition to if response code is not 200 then throw a runtime exception
-            //else continue the actual process of getting the JSON data
-            if (responsecode != 200) {
-                throw new RuntimeException("HttpResponseCode: " + responsecode);
-            } else {
-                //Scanner functionality will read the JSON data from the stream
-                while ((line = br.readLine()) != null) {
-                    result.append(line).append("\n");
-                }
-            }
-            inline = result.toString();
-            if(inline.contains("no trailer")){
-               JOptionPane.showMessageDialog(null, "No trailer aviable"); 
-            }else{
-              urlString = inline.replace("{\"trailerlink\":\"", "");
-            urlString = urlString.replace("\"}", "");   
-            }
-            
-            br.close();
-            isr.close();
-            is.close();
-            conn.disconnect();
-            //Disconnect the HttpURLConnection stream
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return urlString;
     }
     
 }
