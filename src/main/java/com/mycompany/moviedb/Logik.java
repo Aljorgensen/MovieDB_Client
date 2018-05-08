@@ -399,11 +399,12 @@ public class Logik {
     
     public void writeTokenToFile(String tokenString){
         
+        String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
         BufferedWriter bw = null;
         FileWriter fw = null;
 
         try {
-            fw = new FileWriter("/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt");
+            fw = new FileWriter(filepath);
             bw = new BufferedWriter(fw);
             bw.write(tokenString);
 
