@@ -37,7 +37,6 @@ public class Logik {
     ArrayList<String> latest = new ArrayList<>();
     public String clientNavn = "";
     public String token = "";
-    private String Auth = "Bearer " + token;
     private final String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
     Boolean loginStatus = false;
     public int parameter = 0;
@@ -61,7 +60,7 @@ public class Logik {
             URL u = new URL("https://komsaananna.dk/api/movie/search/?search=" + search);
             HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", Auth);
+            conn.setRequestProperty("Authorization", "Bearer " + token);
             conn.setRequestProperty("Content-Type", "application/json");
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
@@ -222,7 +221,7 @@ public class Logik {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
             conn.setRequestMethod("GET");
-            conn.setRequestProperty ("Authorization", Auth);
+            conn.setRequestProperty ("Authorization", "Bearer " + token);
             //Use the connect method to create the connection bridge
             conn.connect();
             //Get the response status of the Rest API
@@ -278,7 +277,7 @@ public class Logik {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
-            httpConnection.setRequestProperty("Authorization", Auth);
+            httpConnection.setRequestProperty("Authorization", "Bearer " + token);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -380,7 +379,7 @@ public class Logik {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
             conn.setRequestMethod("GET");
-            conn.setRequestProperty ("Authorization", Auth);
+            conn.setRequestProperty ("Authorization", "Bearer " + token);
             
             //Get the response status of the Rest API
             int responsecode = conn.getResponseCode();
@@ -477,7 +476,7 @@ public class Logik {
             httpConnection.setRequestMethod("DELETE");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
-            httpConnection.setRequestProperty("Authorization", Auth);
+            httpConnection.setRequestProperty("Authorization", "Bearer " + token);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -547,7 +546,7 @@ public class Logik {
             URL u = new URL("https://komsaananna.dk/api/movie/trailer?id=" + id);
             HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", Auth);
+            conn.setRequestProperty("Authorization", "Bearer " + token);
             conn.setRequestProperty("Content-Type", "application/json");
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
