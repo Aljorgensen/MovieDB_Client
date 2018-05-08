@@ -101,9 +101,9 @@ public class Startgui extends javax.swing.JPanel {
         // TODO add your handling code here:
         String pass = String.valueOf(passT.getPassword());
         ejer.lo.getToken(userT.getText(), pass);
-        if(ejer.lo.loginStatus == true){
-          JOptionPane.showMessageDialog(null, "Succesful login");
-          ejer.skift(ejer.maingui);  
+        if (ejer.lo.loginStatus == true) {
+            JOptionPane.showMessageDialog(null, "Succesful login");
+            ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_loginBActionPerformed
 
@@ -111,9 +111,9 @@ public class Startgui extends javax.swing.JPanel {
         // TODO add your handling code here:
         String pass = String.valueOf(passT.getPassword());
         ejer.lo.getToken(userT.getText(), pass);
-        if(ejer.lo.loginStatus == true){
-          JOptionPane.showMessageDialog(null, "Succesful login");
-          ejer.skift(ejer.maingui);  
+        if (ejer.lo.loginStatus == true) {
+            JOptionPane.showMessageDialog(null, "Succesful login");
+            ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_passTActionPerformed
 

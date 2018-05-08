@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,7 +34,8 @@ public class Logik {
     ArrayList<String> poster = new ArrayList<>();
     ArrayList<String> plot = new ArrayList<>();
     ArrayList<String> latest = new ArrayList<>();
-    private String token = "";
+    public String token = "";
+    private final String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
     Boolean loginStatus = false;
     public int parameter = 0;
     public double page = 0;
@@ -51,6 +53,7 @@ public class Logik {
         plot.clear();
         String inline = "";
         String line;
+        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
@@ -59,6 +62,7 @@ public class Logik {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
             conn.setRequestMethod("GET");
+            conn.setRequestProperty ("Authorization", Auth);
             //Use the connect method to create the connection bridge
             conn.connect();
             //Get the response status of the Rest API
@@ -209,6 +213,7 @@ public class Logik {
         plot.clear();
         String inline = "";
         String line;
+        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
@@ -217,6 +222,7 @@ public class Logik {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
             conn.setRequestMethod("GET");
+            conn.setRequestProperty ("Authorization", Auth);
             //Use the connect method to create the connection bridge
             conn.connect();
             //Get the response status of the Rest API
@@ -260,6 +266,7 @@ public class Logik {
     
     public void addMovie(String id){
         String result = "";
+        String Auth = "Bearer " + token;
             try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -272,6 +279,7 @@ public class Logik {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty ("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -397,9 +405,40 @@ public class Logik {
         
     }
     
+    public void readTokenFromFile(){
+        BufferedReader br = null;
+        FileReader fr = null;
+        try {
+            fr = new FileReader(filepath);
+            br = new BufferedReader(fr);
+            String sCurrentLine;
+
+            while ((sCurrentLine = br.readLine()) != null) {
+                token = sCurrentLine;
+            }
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (fr != null) {
+                    fr.close();
+                }
+            } catch (IOException ex) {
+
+                ex.printStackTrace();
+            }
+
+        }
+    }
+    
     public void writeTokenToFile(String tokenString){
         
-        String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
         BufferedWriter bw = null;
         FileWriter fw = null;
 
@@ -428,6 +467,7 @@ public class Logik {
     
     public void deleteMovie(String id){
         String result = "";
+        String Auth = "Bearer " + token;
         try {
             // Construct manually a JSON object in Java, for testing purposes an object with an object
             JSONObject data = new JSONObject();
@@ -440,6 +480,7 @@ public class Logik {
             httpConnection.setRequestMethod("DELETE");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty ("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -504,6 +545,7 @@ public class Logik {
         String urlString = "";
         String inline = "";
         String line;
+        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
@@ -512,6 +554,7 @@ public class Logik {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
             conn.setRequestMethod("GET");
+            conn.setRequestProperty ("Authorization", Auth);
             //Use the connect method to create the connection bridge
             conn.connect();
             //Get the response status of the Rest API
