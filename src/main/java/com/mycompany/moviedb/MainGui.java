@@ -118,7 +118,7 @@ public class MainGui extends javax.swing.JPanel {
         // TODO add your handling code here:
         String search = "";
         try{
-            search = JOptionPane.showInputDialog(this, "Enter movie name:"); 
+            search = JOptionPane.showInputDialog(this, "Enter movie name:", "batman");
         } catch(Exception e){
             e.printStackTrace();
         }

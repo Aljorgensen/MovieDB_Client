@@ -34,6 +34,7 @@ public class Logik {
     ArrayList<String> poster = new ArrayList<>();
     ArrayList<String> plot = new ArrayList<>();
     ArrayList<String> latest = new ArrayList<>();
+    public String clientNavn = "";
     public String token = "";
     private final String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
     Boolean loginStatus = false;
@@ -57,7 +58,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/search/?search=" + search);
+            URL url = new URL("http://" + clientNavn + "/api/movie/search/?search=" + search);
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -217,7 +218,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/ListMovies?");
+            URL url = new URL("http://" + clientNavn + "/api/movie/ListMovies?");
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements
@@ -273,7 +274,7 @@ public class Logik {
             data.put("ID", id);
 
             // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://peterpan.dk/api/movie/add?ID=" + id);
+            URL url = new URL("http://" + clientNavn + "/api/movie/add?ID=" + id);
             HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
             httpConnection.setDoOutput(true);
             httpConnection.setRequestMethod("POST");
@@ -474,7 +475,7 @@ public class Logik {
             data.put("ID", id);
 
             // URL and parameters for the connection, This particulary returns the information passed
-            URL url = new URL("http://peterpan.dk/api/movie/del?ID=" + id);
+            URL url = new URL("http://" + clientNavn + "/api/movie/del?ID=" + id);
             HttpURLConnection httpConnection  = (HttpURLConnection) url.openConnection();
             httpConnection.setDoOutput(true);
             httpConnection.setRequestMethod("DELETE");
@@ -549,7 +550,7 @@ public class Logik {
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
-            URL url = new URL("http://peterpan.dk/api/movie/trailer?id=" + id);
+            URL url = new URL("http://" + clientNavn + "/api/movie/trailer?id=" + id);
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //Set the request to GET or POST as per the requirements

@@ -31,7 +31,6 @@ public class MovieDB_client {
         ingui.ejer = gc;
         gc.ingui = ingui;
         
-        //lo.readTokenFromFile();
     }
 
 }
