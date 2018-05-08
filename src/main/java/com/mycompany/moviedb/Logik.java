@@ -565,10 +565,12 @@ public class Logik {
     public void definePagenumber(){
         double size = title.size();
         page = size / defineNum;
-        if(page > 8){
-           page = 8; 
-        }else if(page > 7){
-            page = 7;
+        if(page > 10){
+           page = 10; 
+        }else if(page > 9){
+            page = 9;
+        }else if(page > 8){
+            page = 8;
         }else if(page > 6){
             page = 6;
         }else if(page > 5){
