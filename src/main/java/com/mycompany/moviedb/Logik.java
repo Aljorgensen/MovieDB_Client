@@ -37,6 +37,7 @@ public class Logik {
     ArrayList<String> latest = new ArrayList<>();
     public String clientNavn = "";
     public String token = "";
+    private String Auth = "Bearer " + token;
     private final String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
     Boolean loginStatus = false;
     public int parameter = 0;
@@ -55,7 +56,6 @@ public class Logik {
         plot.clear();
         String inline = "";
         String line;
-        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         try {
             URL u = new URL("https://komsaananna.dk/api/movie/search/?search=" + search);
@@ -68,7 +68,7 @@ public class Logik {
             BufferedReader br = new BufferedReader(isr);
 
             int responsecode = conn.getResponseCode();
-            System.out.println("Response code is: " + responsecode + " Trailer");
+            System.out.println("Response code is: " + responsecode + " Moviesearch");
             //Iterating condition to if response code is not 200 then throw a runtime exception
             //else continue the actual process of getting the JSON data
             if (responsecode != 200) {
@@ -214,7 +214,6 @@ public class Logik {
         plot.clear();
         String inline = "";
         String line;
-        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         BufferedReader rd;
         try {
@@ -279,6 +278,7 @@ public class Logik {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -374,7 +374,6 @@ public class Logik {
     }
     
     void verifyToken(){
-        String Auth = "Bearer " + token;
         try { 
             URL url = new URL("https://komsaananna.dk/api/user/verifytoken");
             //Parse URL into HttpURLConnection in order to open the connection in order to get the JSON data
@@ -478,6 +477,7 @@ public class Logik {
             httpConnection.setRequestMethod("DELETE");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty("Authorization", Auth);
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
@@ -542,7 +542,6 @@ public class Logik {
         String urlString = "";
         String inline = "";
         String line;
-        String Auth = "Bearer " + token;
         StringBuilder result = new StringBuilder("");
         try {
             URL u = new URL("https://komsaananna.dk/api/movie/trailer?id=" + id);
