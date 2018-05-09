@@ -603,7 +603,7 @@ public class Logik {
             String buffer = content.toString();
             String[] bufferarray = buffer.split("\n");
             username = bufferarray[0];
-            clientNavn = bufferarray[2];
+            clientNavn = bufferarray[1];
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -620,10 +620,10 @@ public class Logik {
         }
     }
     
-    public void saveLogin(String user, String pass, String address){
+    public void saveLogin(String user, String address){
         BufferedWriter bw = null;
         FileWriter fw = null;
-        String credentials = user + "\n" + pass + "\n" + address;
+        String credentials = user + "\n" + address;
         try {
             fw = new FileWriter(filepathLogin);
             bw = new BufferedWriter(fw);

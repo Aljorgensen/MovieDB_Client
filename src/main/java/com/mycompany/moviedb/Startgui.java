@@ -121,7 +121,7 @@ public class Startgui extends javax.swing.JPanel {
         ejer.lo.clientNavn = clientName.getText();
         if (ejer.lo.loginStatus == true) {
             JOptionPane.showMessageDialog(null, "Succesful login");
-            ejer.lo.saveLogin(userT.getText(), pass, clientName.getText());
+            ejer.lo.saveLogin(userT.getText(), clientName.getText());
             ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_loginBActionPerformed
@@ -133,7 +133,7 @@ public class Startgui extends javax.swing.JPanel {
         ejer.lo.clientNavn = clientName.getText();
         if (ejer.lo.loginStatus == true) {
             JOptionPane.showMessageDialog(null, "Succesful login");
-            ejer.lo.saveLogin(userT.getText(), pass, clientName.getText());
+            ejer.lo.saveLogin(userT.getText(), clientName.getText());
             ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_passTActionPerformed
