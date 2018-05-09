@@ -24,6 +24,7 @@ public class MovieDB_client {
         
         GuiController gc = new GuiController();
         gc.lo = lo;
+        lo.ejer = gc;
         maingui.ejer = gc;
         gc.maingui = maingui;
         regui.ejer = gc;
@@ -31,6 +32,7 @@ public class MovieDB_client {
         ingui.ejer = gc;
         gc.ingui = ingui;
         
+        lo.renewToken();
     }
 
 }

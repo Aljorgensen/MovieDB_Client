@@ -28,6 +28,7 @@ public class Logik {
     MainGui mg;
     ResultGui rg;
     InfoGui ig;
+    Startgui st;
     
     ArrayList<String> title = new ArrayList<>();
     ArrayList<String> id = new ArrayList<>();
@@ -37,7 +38,9 @@ public class Logik {
     ArrayList<String> latest = new ArrayList<>();
     public String clientNavn = "";
     public String token = "";
-    private final String filepath = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
+    private final String filepathToken = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/token.txt";
+    private final String filepathLogin = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/login.txt";
+    private String username = "";
     Boolean loginStatus = false;
     public int parameter = 0;
     public double page = 0;
@@ -45,6 +48,7 @@ public class Logik {
     public double pageNum = 0;
     public int choice = 0;
     public int type = 0;
+    public GuiController ejer;
     
     //API-Methods
     public void movie_search(String search) {
@@ -397,7 +401,15 @@ public class Logik {
     }
     
     void renewToken(){
-        
+        readTokenFromFile();
+        verifyToken();
+        loadLogin();
+        if(loginStatus == true){
+            JOptionPane.showMessageDialog(null, "Succesful login");
+            ejer.skift(ejer.maingui);
+        }else{
+            JOptionPane.showMessageDialog(null, "Couldn't validate old token, please login again");
+        }
     }
     
     //Logic-Methoeds
@@ -506,18 +518,14 @@ public class Logik {
         BufferedReader br = null;
         FileReader fr = null;
         try {
-            fr = new FileReader(filepath);
+            fr = new FileReader(filepathToken);
             br = new BufferedReader(fr);
             String sCurrentLine;
-
             while ((sCurrentLine = br.readLine()) != null) {
                 token = sCurrentLine;
             }
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         } finally {
             try {
                 if (br != null) {
@@ -527,27 +535,20 @@ public class Logik {
                     fr.close();
                 }
             } catch (IOException ex) {
-
                 ex.printStackTrace();
             }
-
         }
     }
     
     public void writeTokenToFile(String tokenString){
-        
         BufferedWriter bw = null;
         FileWriter fw = null;
-
         try {
-            fw = new FileWriter(filepath);
+            fw = new FileWriter(filepathToken);
             bw = new BufferedWriter(fw);
             bw.write(tokenString);
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         } finally {
             try {
                 if (bw != null) {
@@ -585,6 +586,61 @@ public class Logik {
             page = 1;
         }else if(page > 0){
             page = 0;
+        }
+    }
+    
+    public void loadLogin(){
+        BufferedReader br = null;
+        FileReader fr = null;
+        try {
+            fr = new FileReader(filepathLogin);
+            br = new BufferedReader(fr);;
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            String buffer = content.toString();
+            String[] bufferarray = buffer.split("\n");
+            username = bufferarray[0];
+            clientNavn = bufferarray[2];
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (fr != null) {
+                    fr.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public void saveLogin(String user, String pass, String address){
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+        String credentials = user + "\n" + pass + "\n" + address;
+        try {
+            fw = new FileWriter(filepathLogin);
+            bw = new BufferedWriter(fw);
+            bw.write(credentials);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+                if (fw != null) {
+                    fw.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     

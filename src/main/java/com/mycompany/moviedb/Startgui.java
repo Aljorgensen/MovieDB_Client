@@ -121,6 +121,7 @@ public class Startgui extends javax.swing.JPanel {
         ejer.lo.clientNavn = clientName.getText();
         if (ejer.lo.loginStatus == true) {
             JOptionPane.showMessageDialog(null, "Succesful login");
+            ejer.lo.saveLogin(userT.getText(), pass, clientName.getText());
             ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_loginBActionPerformed
@@ -132,19 +133,20 @@ public class Startgui extends javax.swing.JPanel {
         ejer.lo.clientNavn = clientName.getText();
         if (ejer.lo.loginStatus == true) {
             JOptionPane.showMessageDialog(null, "Succesful login");
+            ejer.lo.saveLogin(userT.getText(), pass, clientName.getText());
             ejer.skift(ejer.maingui);
         }
     }//GEN-LAST:event_passTActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField clientName;
+    public javax.swing.JTextField clientName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton loginB;
-    private javax.swing.JPasswordField passT;
-    private javax.swing.JTextField userT;
+    public javax.swing.JPasswordField passT;
+    public javax.swing.JTextField userT;
     // End of variables declaration//GEN-END:variables
 }

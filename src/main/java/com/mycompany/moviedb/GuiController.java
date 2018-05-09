@@ -17,7 +17,6 @@ public class GuiController {
     InfoGui ingui;
     
     public GuiController(){
-        //System.out.println("Hej fra constructor");
         Startgui start = new Startgui();
         
         start.ejer = this;
