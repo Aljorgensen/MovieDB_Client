@@ -33,7 +33,6 @@ public class ResultGui extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         poster = new javax.swing.JLabel();
         moreInfo = new javax.swing.JButton();
-        addB = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         listTest = new java.awt.List();
 
@@ -59,13 +58,6 @@ public class ResultGui extends javax.swing.JPanel {
         moreInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moreInfoActionPerformed(evt);
-            }
-        });
-
-        addB.setText("Add movie");
-        addB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBActionPerformed(evt);
             }
         });
 
@@ -95,8 +87,7 @@ public class ResultGui extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(addB)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(moreInfo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(returnB))
@@ -135,8 +126,7 @@ public class ResultGui extends javax.swing.JPanel {
                                 .addGap(23, 23, 23)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnB)
-                    .addComponent(moreInfo)
-                    .addComponent(addB))
+                    .addComponent(moreInfo))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -144,6 +134,7 @@ public class ResultGui extends javax.swing.JPanel {
     private void returnBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBActionPerformed
         // TODO add your handling code here:
         ejer.skift(ejer.maingui);
+        lg.type =0;
         lg.setLatest();
     }//GEN-LAST:event_returnBActionPerformed
 
@@ -157,11 +148,6 @@ public class ResultGui extends javax.swing.JPanel {
         ejer.skift(ejer.ingui); 
     }//GEN-LAST:event_moreInfoActionPerformed
 
-    private void addBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBActionPerformed
-        // TODO add your handling code here:
-        lg.addMovie(lg.id.get(listTest.getSelectedIndex()));
-    }//GEN-LAST:event_addBActionPerformed
-
     private void listTestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTestMouseClicked
         // TODO add your handling code here:
         lg.setPosterResult(listTest.getSelectedIndex()); 
@@ -169,7 +155,6 @@ public class ResultGui extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addB;
     private javax.swing.JLabel jLabel2;
     public javax.swing.JPanel jPanel1;
     private javax.swing.JScrollBar jScrollBar1;

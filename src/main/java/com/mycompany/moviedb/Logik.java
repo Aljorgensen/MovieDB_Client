@@ -1,5 +1,7 @@
 package com.mycompany.moviedb;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -45,6 +48,7 @@ public class Logik {
     Boolean loginStatus = false;
     public int type = 0;
     public GuiController ejer;
+    JButton b1 = new JButton();
     
     //API-Methods
     public void movie_search(String search) {
@@ -427,6 +431,20 @@ public class Logik {
             for(int i = 0; i < title.size(); i++){
                 rg.listTest.add(title.get(i)); 
             }
+            if(type == 0){
+                b1.setVisible(true);
+                b1.setBounds(5, 475, 111, 29);
+                b1.setText("Add movie");
+                b1.addActionListener((ActionEvent e) -> {
+                    addMovie(id.get(rg.listTest.getSelectedIndex()));
+                });
+                rg.add(b1); 
+            }else{
+                rg.remove(b1);
+                rg.revalidate();
+                rg.repaint();
+            } 
+            
         }
         return true;
     }
