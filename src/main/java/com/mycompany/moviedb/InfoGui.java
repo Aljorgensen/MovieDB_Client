@@ -225,11 +225,6 @@ public class InfoGui extends javax.swing.JPanel {
         if(lg.type == 1){
             lg.getMovielist();
             lg.setPosterResult(0);
-            regui.choiceOne.setText("<-");
-            regui.choiceTwo.setText("");
-            regui.choiceThree.setText("");
-            regui.choiceFour.setText("");
-            regui.choiceFive.setText("");
         }
         lg.setMovie();
         ejer.skift(ejer.regui);

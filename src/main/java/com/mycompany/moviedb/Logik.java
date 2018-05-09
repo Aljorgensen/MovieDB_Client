@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -42,11 +43,6 @@ public class Logik {
     private final String filepathLogin = "/Users/andersjorgensen/Documents/DTU/Programmering/Java/MovieDB/login.txt";
     private String username = "";
     Boolean loginStatus = false;
-    public int parameter = 0;
-    public double page = 0;
-    public double defineNum = 5;
-    public double pageNum = 0;
-    public int choice = 0;
     public int type = 0;
     public GuiController ejer;
     
@@ -423,52 +419,14 @@ public class Logik {
     }
     
     public Boolean setMovie(){
+        rg.listTest.removeAll();
         if(title.isEmpty()){
             JOptionPane.showMessageDialog(null, "Seach attempt failed, try again");
             return false;
         }else{
-        rg.movieOneTitle.setText("Title: " + title.get(0 + parameter));
-        rg.movieOneID.setText("ID: " + id.get(0 + parameter));
-        if(title.size() > 1 + parameter){
-           rg.movieTwoTitle.setText("Title: " + title.get(1 + parameter));
-           rg.movieTwoID.setText("ID: " + id.get(1 + parameter));
-          if(title.size() > 2 + parameter){
-            rg.movieThreeTitle.setText("Title: " + title.get(2 + parameter));
-            rg.movieThreeID.setText("ID: " + id.get(2 + parameter));
-            if(title.size() > 3 + parameter) {
-              rg.movieFourTitle.setText("Title: " + title.get(3 + parameter));
-              rg.movieFourID.setText("ID: " + id.get(3 + parameter));
-              if(title.size() > 4 + parameter){
-                rg.movieFiveTitle.setText("Title: " + title.get(4 + parameter));
-                rg.movieFiveID.setText("ID: " + id.get(4 + parameter));
-              }else{
-                rg.movieFiveTitle.setText("Title: No Result");
-                rg.movieFiveID.setText("ID: No Result");   
-              }
-            }else{
-             rg.movieFourTitle.setText("Title: No Result");
-             rg.movieFourID.setText("ID: No Result");
-             rg.movieFiveTitle.setText("Title: No Result");
-             rg.movieFiveID.setText("ID: No Result");  
+            for(int i = 0; i < title.size(); i++){
+                rg.listTest.add(title.get(i)); 
             }
-          }else{
-            rg.movieThreeTitle.setText("Title: No Result");
-            rg.movieThreeID.setText("ID: No Result");
-            rg.movieFourTitle.setText("Title: No Result");
-            rg.movieFourID.setText("ID: No Result");
-            rg.movieFiveTitle.setText("Title: No Result");
-            rg.movieFiveID.setText("ID: No Result"); 
-          }
-        }else{
-            rg.movieTwoTitle.setText("Title: No Result");
-            rg.movieTwoID.setText("ID: No Result");
-            rg.movieThreeTitle.setText("Title: No Result");
-            rg.movieThreeID.setText("ID: No Result");
-            rg.movieFourTitle.setText("Title: No Result");
-            rg.movieFourID.setText("ID: No Result");
-            rg.movieFiveTitle.setText("Title: No Result");
-            rg.movieFiveID.setText("ID: No Result");
-        }  
         }
         return true;
     }
@@ -490,7 +448,7 @@ public class Logik {
     
     public void setPoster(int num){
        ig.poster.removeAll();
-       String posterUrl = poster.get(num + parameter);
+       String posterUrl = poster.get(num);
        if(!"".equals(posterUrl)){
          try{
            BufferedImage img = ImageIO.read(new URL(posterUrl));
@@ -503,7 +461,7 @@ public class Logik {
     
     public void setPosterResult(int num){
        rg.poster.removeAll();
-       String posterUrl = poster.get(num + parameter);
+       String posterUrl = poster.get(num);
        if(!"".equals(posterUrl)){
          try{
            BufferedImage img = ImageIO.read(new URL(posterUrl));
@@ -561,33 +519,7 @@ public class Logik {
                 ex.printStackTrace();
             }
         }
-    }
-    
-    public void definePagenumber(){
-        double size = title.size();
-        page = size / defineNum;
-        if(page > 10){
-           page = 10; 
-        }else if(page > 9){
-            page = 9;
-        }else if(page > 8){
-            page = 8;
-        }else if(page > 6){
-            page = 6;
-        }else if(page > 5){
-            page = 5;
-        }else if(page > 4){
-            page = 4;
-        }else if(page > 3){
-            page = 3;
-        }else if(page > 2){
-            page = 2;
-        }else if(page > 1){
-            page = 1;
-        }else if(page > 0){
-            page = 0;
-        }
-    }
+    }    
     
     public void loadLogin(){
         BufferedReader br = null;

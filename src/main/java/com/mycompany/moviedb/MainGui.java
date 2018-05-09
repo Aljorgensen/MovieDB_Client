@@ -126,15 +126,7 @@ public class MainGui extends javax.swing.JPanel {
         lg.movie_search(search);
         lg.latest.add(search); 
         lg.setPosterResult(0);
-        lg.definePagenumber();
-        lg.choice = 0;
         lg.type = 0;
-        regui.reguiTitle.setText("Results");
-        regui.choiceOne.setText("<-");
-        regui.choiceTwo.setText("");
-        regui.choiceThree.setText("");
-        regui.choiceFour.setText("");
-        regui.choiceFive.setText("");
         if(lg.setMovie() == true){
           ejer.skift(regui);  
         }
@@ -153,15 +145,8 @@ public class MainGui extends javax.swing.JPanel {
         // TODO add your handling code here:
         lg.getMovielist();
         lg.setPosterResult(0);
-        lg.definePagenumber();
-        lg.choice = 0;
         lg.type = 1;
         regui.reguiTitle.setText("Movielist");
-        regui.choiceOne.setText("<-");
-        regui.choiceTwo.setText("");
-        regui.choiceThree.setText("");
-        regui.choiceFour.setText("");
-        regui.choiceFive.setText("");
         if(lg.setMovie() == true){
           ejer.skift(regui);  
         }
